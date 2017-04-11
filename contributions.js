@@ -33,9 +33,8 @@ function displayContributions(req,res,next)
 function displayContributions0(req,res,next,sts)
 {
    var userid = req.session.userId;
-
-   var q = "SELECT * FROM Contributions WHERE userId = " + userid;
-   db.query(q,function (e1,d1) { displayContributions1(req,res,next,sts,e1,d1); } );
+   var q = "SELECT * FROM Contributions WHERE userId = $1;";
+   db.query(q, [userid], function (e1,d1) { displayContributions1(req,res,next,sts,e1,d1); } );
 }
 
 
@@ -61,31 +60,30 @@ function displayContributions1(req,res,next,sts,err,data)
 
 function handleContributionsUpdate(req,res,next)
 {
-   // convert to numbers
-   var preTax = eval(req.body.preTax);
-   var afterTax = eval(req.body.afterTax);
-   var roth = eval(req.body.roth);
+    // convert to numbers
+    var preTax =  parseInt(req.body.preTax);
+    var afterTax = parseInt(req.body.afterTax);
+    var roth = parseInt(req.body.roth);
 
-   var userId = req.session.userId;
+    var userId = req.session.userId;
 
-   //validate contributions
-   if (isNaN(preTax) || isNaN(afterTax) || isNaN(roth) || preTax < 0 || afterTax < 0 || roth < 0) {
+    //validate contributions
+    if (isNaN(preTax) || isNaN(afterTax) || isNaN(roth) || preTax < 0 || afterTax < 0 || roth < 0) {
       return res.render("contributions", {
-			updateError: "Invalid contribution percentages",
-				  userId: userId
-			 });
+    	updateError: "Invalid contribution percentages",
+    		  userId: userId
+    	 });
     }
-   // Prevent more than 30% contributions
-   if (preTax + afterTax + roth > 30) {
+    // Prevent more than 30% contributions
+    if (preTax + afterTax + roth > 30) {
       return res.render("contributions", {
-			updateError: "Contribution percentages cannot exceed 30 %",
-				  userId: userId
-			 });
+    	updateError: "Contribution percentages cannot exceed 30 %",
+    		  userId: userId
+    	 });
     }
 
-   var q = "UPDATE Contributions SET preTax = " + preTax + ", afterTax = " + afterTax +
-      ", roth = " + roth + " WHERE userId = " + userId;
-   db.query(q,function (e1,d1) { handleContributionsUpdate1(req,res,next,e1,d1); } );
+    var q = "UPDATE Contributions SET preTax = $1, afterTax = $2, roth = $3 WHERE userId = $4;";
+    db.query(q, [preTax, afterTax, roth, userId] , function (e1,d1) { handleContributionsUpdate1(req,res,next,e1,d1); } );
 }
 
 
