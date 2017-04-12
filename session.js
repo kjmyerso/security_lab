@@ -198,7 +198,7 @@ function handleSignup(req,res,next)
     };
 
    if (validateSignup(userName, firstName, lastName, password, verify, email, errors)) {
-      var q = "SELECT * FROM User U WHERE U.userName = '?'";
+      var q = "SELECT * FROM User U WHERE U.userName = ?";
       db.query(q, [userName], function (e1,d1) { handleSignup1(req,res,next,errors,e1,d1); });
     }
     else {
