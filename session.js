@@ -27,7 +27,7 @@ var db = require("./database.js");
 function isAdminUserMiddleware(req,res,next)
 {
    if (req.session.userId) {
-      var q = "SELECT * FROM User WHERE userId = $1;";
+      var q = "SELECT * FROM User WHERE userId = $1";
       db.query(q, [req.session.userId], function (e1,d1) { isAdminUserMiddleware1(req,res,next,e1,d1) } );
     }
    else {
@@ -91,7 +91,7 @@ function handleLoginRequest(req,res,next)
 {
    var username = req.body.userName;
    var password = req.body.password;
-   var q = "SELECT * FROM User U WHERE U.userName = '$1';";
+   var q = "SELECT * FROM User U WHERE U.userName = '$1'";
    db.query(q, [username], function (e1,d1) { handleLoginRequest1(req,res,next,e1,d1); } );
 }
 
@@ -198,7 +198,7 @@ function handleSignup(req,res,next)
     };
 
    if (validateSignup(userName, firstName, lastName, password, verify, email, errors)) {
-      var q = "SELECT * FROM User U WHERE U.userName = '$1';";
+      var q = "SELECT * FROM User U WHERE U.userName = '$1'";
       db.query(q, [userName], function (e1,d1) { handleSignup1(req,res,next,errors,e1,d1); });
     }
     else {
