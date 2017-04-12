@@ -15,7 +15,7 @@
 /********************************************************************************/
 
 var db = require("./database.js");
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt-nodejs');
 
 
 
