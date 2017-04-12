@@ -222,7 +222,7 @@ function handleSignup1(req,res,next,errors,err,data)
       errors.userNameError = "User name already in use. Please choose another";
       return res.render("signup", errors);
     }
-   var q = "INSERT INTO User ( userName, firstName, lastName, password, email) VALUES ('?','?','?','?','?')";
+   var q = "INSERT INTO User ( userName, firstName, lastName, password, email) VALUES (?,?,?,?,?)";
 
    db.query(q,[userName, firstName, lastName, password, email], function(e1,d1) { handleSignup2(req,res,next,e1,d1); } );
 }
@@ -234,7 +234,7 @@ function handleSignup2(req,res,next,err,data)
    if (err != null) return next(err);
    
    var userName = req.body.userName;
-   var q = "SELECT * FROM User U WHERE U.userName = '?'";
+   var q = "SELECT * FROM User U WHERE U.userName = ?";
    db.query(q, [userName], function (e1,d1) { handleSignup3(req,res,next,e1,d1); } );
 }
 

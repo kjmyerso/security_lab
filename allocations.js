@@ -29,12 +29,12 @@ function displayAllocations(req,res,next)
    
    var threshold = req.query.threshold;
  
-   var q = "SELECT * FROM Allocations WHERE userId = $1";
+   var q = "SELECT * FROM Allocations WHERE userId = ?";
    var params = [userId];
    if (threshold) {
        var thint = threshold*1;
        if (thint >= 0 && thint <= 99) {
-           q += " AND stocks > $2";
+           q += " AND stocks > ?";
            params = [userId, thint];
         }
     }
