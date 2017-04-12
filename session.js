@@ -15,6 +15,7 @@
 /********************************************************************************/
 
 var db = require("./database.js");
+var bcrypt = require('bcrypt');
 
 
 
@@ -91,7 +92,7 @@ function handleLoginRequest(req,res,next)
 {
    var username = req.body.userName;
    var password = req.body.password;
-   var q = "SELECT * FROM User U WHERE U.userName = '?'";
+   var q = "SELECT * FROM User U WHERE U.userName = ?";
    db.query(q, [username], function (e1,d1) { handleLoginRequest1(req,res,next,e1,d1); } );
 }
 
@@ -129,7 +130,12 @@ function handleLoginRequest1(req,res,next,err,data)
 
 function comparePassword(fromdb,fromuser)
 {
-   return fromdb == fromuser;
+	//return fromdb == fromuser;
+	if (bcrypt.compareSync(fromdb, fromuser)) {
+	    return true;
+	} else {
+	    return false;
+	}
 }
 
 
@@ -210,21 +216,26 @@ function handleSignup(req,res,next)
 
 function handleSignup1(req,res,next,errors,err,data)
 {
-   var email = req.body.email;
-   var userName = req.body.userName;
-   var firstName = req.body.firstName;
-   var lastName = req.body.lastName;
-   var password = req.body.password;
-   var verify = req.body.verify;   
-   
-   if (err != null) return next(err);
-   if (data.rows.length != 0) {
-      errors.userNameError = "User name already in use. Please choose another";
-      return res.render("signup", errors);
-    }
-   var q = "INSERT INTO User ( userName, firstName, lastName, password, email) VALUES (?,?,?,?,?)";
+	var email = req.body.email;
+	var userName = req.body.userName;
+	var firstName = req.body.firstName;
+	var lastName = req.body.lastName;
+	var password = req.body.password;
+	var verify = req.body.verify;   
 
-   db.query(q,[userName, firstName, lastName, password, email], function(e1,d1) { handleSignup2(req,res,next,e1,d1); } );
+	if (err != null) return next(err);
+	if (data.rows.length != 0) {
+		errors.userNameError = "User name already in use. Please choose another";
+		return res.render("signup", errors);
+	}
+	var q = "INSERT INTO User ( userName, firstName, lastName, password, email) VALUES (?,?,?,?,?)";
+
+
+	var salt = bcrypt.genSaltSync();
+	var passwordHash = bcrypt.hashSync(password, salt);
+
+
+	db.query(q,[userName, firstName, lastName, passwordHash, email], function(e1,d1) { handleSignup2(req,res,next,e1,d1); } );
 }
 
 
