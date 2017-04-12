@@ -27,7 +27,7 @@ var db = require("./database.js");
 function isAdminUserMiddleware(req,res,next)
 {
    if (req.session.userId) {
-      var q = "SELECT * FROM User WHERE userId = $1";
+      var q = "SELECT * FROM User WHERE userId = ?";
       db.query(q, [req.session.userId], function (e1,d1) { isAdminUserMiddleware1(req,res,next,e1,d1) } );
     }
    else {
@@ -91,7 +91,7 @@ function handleLoginRequest(req,res,next)
 {
    var username = req.body.userName;
    var password = req.body.password;
-   var q = "SELECT * FROM User U WHERE U.userName = '$1'";
+   var q = "SELECT * FROM User U WHERE U.userName = '?'";
    db.query(q, [username], function (e1,d1) { handleLoginRequest1(req,res,next,e1,d1); } );
 }
 
@@ -198,7 +198,7 @@ function handleSignup(req,res,next)
     };
 
    if (validateSignup(userName, firstName, lastName, password, verify, email, errors)) {
-      var q = "SELECT * FROM User U WHERE U.userName = '$1'";
+      var q = "SELECT * FROM User U WHERE U.userName = '?'";
       db.query(q, [userName], function (e1,d1) { handleSignup1(req,res,next,errors,e1,d1); });
     }
     else {
@@ -222,7 +222,7 @@ function handleSignup1(req,res,next,errors,err,data)
       errors.userNameError = "User name already in use. Please choose another";
       return res.render("signup", errors);
     }
-   var q = "INSERT INTO User ( userName, firstName, lastName, password, email) VALUES ('$1','$2','$3','$4','$5')";
+   var q = "INSERT INTO User ( userName, firstName, lastName, password, email) VALUES ('?','?','?','?','?')";
 
    db.query(q,[userName, firstName, lastName, password, email], function(e1,d1) { handleSignup2(req,res,next,e1,d1); } );
 }
@@ -234,7 +234,7 @@ function handleSignup2(req,res,next,err,data)
    if (err != null) return next(err);
    
    var userName = req.body.userName;
-   var q = "SELECT * FROM User U WHERE U.userName = '$1'";
+   var q = "SELECT * FROM User U WHERE U.userName = '?'";
    db.query(q, [userName], function (e1,d1) { handleSignup3(req,res,next,e1,d1); } );
 }
 
@@ -319,7 +319,7 @@ function prepareUserData(user,next)
    var funds = Math.floor((Math.random() * 40) + 1);
    var bonds = 100 - (stocks + funds);
 
-   var q = "INSERT INTO Allocations (userId,stocks,funds,bonds) VALUES ( $1,$2,$3,$4)";
+   var q = "INSERT INTO Allocations (userId,stocks,funds,bonds) VALUES (?, ?, ?, ?)";
 
    db.query(q, [user.userId, stocks, funds, bonds], function (e1,d1) { prepareUserData1(user,next,e1,d1); } );
 }
@@ -330,7 +330,7 @@ function prepareUserData1(user,next,err,data)
    if (err != null) 
    	return next(err);
 
-   var q = "INSERT INTO Profile (userid) VALUES ( $1)";
+   var q = "INSERT INTO Profile (userid) VALUES ( ?)";
    db.query(q, [user.userId], function(e1,d1) { prepareUserData2(user,next,e1,d1); } );
 }
 
@@ -340,7 +340,7 @@ function prepareUserData2(user,next,err,data)
    if (err != null) 
    	return next(err);
 
-   var q = "INSERT INTO Contributions (userid) VALUES ( $1)";
+   var q = "INSERT INTO Contributions (userid) VALUES ( ?)";
    db.query(q, [user.userId], function(e1,d1) { prepareUserData3(user,next,e1,d1); } );
 }
 
@@ -370,7 +370,7 @@ function displayWelcomePage(req,res,next)
 
    userId = req.session.userId;
 
-   var q = "SELECT * FROM User WHERE userId = $1";
+   var q = "SELECT * FROM User WHERE userId = ?";
    db.query(q, [userId], function (e1,d1) { displayWelcomePage1(req,res,next,e1,d1); } );
 }
 
