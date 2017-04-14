@@ -75,7 +75,7 @@ function setup()
    
    // intialize marked library
    marked.setOptions({ 
-      sanitize: true;
+      sanitize: true
    });
    app.locals.marked = marked;
 
