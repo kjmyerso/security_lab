@@ -59,7 +59,7 @@ function setup()
 		resave: true,
 		cookie: {
 			httpOnly: true,
-         maxAge: 60000 * 3; //3 minutes
+         maxAge: 60000 * 3 //3 minutes
 		}
 	}));
 
