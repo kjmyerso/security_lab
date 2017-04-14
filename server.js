@@ -57,9 +57,10 @@ function setup()
 		secret: config.COOKIE_SECRET,
 		saveUninitialized: true,
 		resave: true,
+      key: "sessionId",
 		cookie: {
 			httpOnly: true,
-         maxAge: 60000 * 3 //3 minutes
+         maxAge: 60000 * 10 //10 minutes
 		}
 	}));
 
@@ -110,9 +111,6 @@ function setup()
    app.get("/contributions", contributions.displayContributions);
    app.post("/contributions", contributions.handleContributionsUpdate);
 
-   // Benefits Page
-   app.get("/benefits", benefits.displayBenefits);
-   app.post("/benefits", benefits.updateBenefits);
 
    // Allocations Page
    app.get("/allocations/:userId", allocations.displayAllocations);
@@ -125,6 +123,14 @@ function setup()
    app.get("/learn", function(req, res, next) {
 	      return res.redirect(req.query.url);
 	    });
+
+
+   // anything below here requires admin priviledges
+   app.use(sessionmanager.isAdminUserMiddleware);
+
+    // Benefits Page
+   app.get("/benefits", benefits.displayBenefits);
+   app.post("/benefits", benefits.updateBenefits);
 
    // Error handling middleware
    app.use(errorHandler);
