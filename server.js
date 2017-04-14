@@ -14,6 +14,7 @@ var express = require("express");
 var favicon = require("serve-favicon");
 var bodyParser = require("body-parser");
 var session = require("express-session");
+var cookieParser = require('cookie-parser')
 
 var consolidate = require("consolidate"); // Templating library adapter for Express
 var swig = require("swig");
@@ -50,7 +51,7 @@ function setup()
    app.use(bodyParser.urlencoded({ extended: false }));
 
 
-   app.use(express.cookieParser());
+   app.use(cookieParser())
       
 	app.use(session({
 		secret: config.COOKIE_SECRET,
