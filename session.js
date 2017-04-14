@@ -104,7 +104,6 @@ function handleLoginRequest1(req,res,next,err,data)
    var username = req.body.userName;
    var password = req.body.password;
 
-   var invalidUserNameErrorMapp.use(express.cookieParser());app.use(express.cookieParser());essage = "Invalid username";
    var errorMessage = "Incorrect username and/or password."
 
    if (err) next(err);
