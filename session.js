@@ -156,7 +156,7 @@ function displayLogoutPage(req,res)
 
 function displayLogoutPage1(req,res)
 {
-   req.session.destroy(function() { res.redirect("/"); });
+    res.redirect("/");
 }
 
 
