@@ -104,21 +104,21 @@ function handleLoginRequest1(req,res,next,err,data)
    var username = req.body.userName;
    var password = req.body.password;
 
-   var invalidUserNameErrorMessage = "Invalid username";
-   var invalidPasswordErrorMessage = "Invalid password";
+   var invalidUserNameErrorMapp.use(express.cookieParser());app.use(express.cookieParser());essage = "Invalid username";
+   var errorMessage = "Incorrect username and/or password."
 
    if (err) next(err);
    else if (data.rows.length != 1) {
       return res.render("login", { userName : username,
 				      password : "",
-				      loginError : invalidUserNameErrorMessage } );
+				      loginError : errorMessage } );
     }
    else {
       var userdata = data.rows[0];
       if (!comparePassword(password,userdata.password)) {
 	 return res.render("login", { userName : username,
 				      password : "",
-				      loginError : invalidPasswordErrorMessage } );
+				      loginError : errorMessage } );
        }
 
       req.session.userId = userdata.userId;
@@ -150,13 +150,14 @@ function comparePassword(fromdb,fromuser)
 function displayLogoutPage(req,res)
 {
    req.session.destroy(function () { displayLogoutPage1(req,res) });
+
 }
 
 
 
 function displayLogoutPage1(req,res)
 {
-   res.redirect("/");
+   req.session.destroy(function() { res.redirect("/"); });
 }
 
 
@@ -276,7 +277,7 @@ function validateSignup(username,firstname,lastname,password,verify,email,errors
    var FNAME_RE = /^.{1,100}$/;
    var LNAME_RE = /^.{1,100}$/;
    var EMAIL_RE = /^[\S]+@[\S]+\.[\S]+$/;
-   var PASS_RE = /^.{1,20}$/;
+   var PASS_RE =/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
    errors.userNameError = "";
    errors.firstNameError = "";
@@ -299,7 +300,7 @@ function validateSignup(username,firstname,lastname,password,verify,email,errors
       return false;
     }
    if (!PASS_RE.test(password)) {
-      errors.passwordError = "Password must be 8 to 18 characters" +
+      errors.passwordError = "Password must be at least 8 characters" +
 	 " including numbers, lowercase and uppercase letters.";
       return false;
     }

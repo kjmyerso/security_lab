@@ -48,10 +48,19 @@ function setup()
 
    app.use(bodyParser.json());
    app.use(bodyParser.urlencoded({ extended: false }));
-   
-   app.use(session({ secret: config.COOKIE_SECRET,
-		     saveUninitialized: true,
-		     resave: true }));
+
+
+   app.use(express.cookieParser());
+      
+	app.use(session({
+		secret: config.COOKIE_SECRET,
+		saveUninitialized: true,
+		resave: true,
+		cookie: {
+			httpOnly: true,
+			secure: true
+		}
+	}));
 
    // Register templating engine
    app.engine(".html", consolidate.swig);
@@ -69,7 +78,7 @@ function setup()
    var isAdmin = sessionmanager.isAdminUserMiddleware;
    app.get("/", sessionmanager.displayWelcomePage);
 
-   app.get("/login", sessionmanager.displayLoginPage);
+   app.get("/login", sessionmanager.displayLoginPage);	
    app.post("/login", sessionmanager.handleLoginRequest);
 
    app.get("/signup", sessionmanager.displaySignupPage);
@@ -121,8 +130,13 @@ function setup()
 
    // Template system setup
    swig.setDefaults({
-	 autoescape: false
+	 autoescape: true
     });
+
+	swig.init({
+		root: __dirname + "/app/views",
+		autoescape: true //default value
+	});
 
    var port = config.PORT;
    var server = app.listen(port);

@@ -72,7 +72,9 @@ function displayBenefits1(req,res,next,succ,err,data)
 
 function updateBenefits(req,res,next)
 {
-   var userid = req.body.userId;
+   //var userid = req.body.userId;
+   var userId = req.session.userId;
+   
    var date = req.body.benefitStartDate;
 
    var q = "UPDATE User SET benefitStartDate = ? WHERE userId = ?";
