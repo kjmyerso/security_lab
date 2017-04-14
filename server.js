@@ -131,13 +131,9 @@ function setup()
 
    // Template system setup
    swig.setDefaults({
-	 autoescape: true
-    });
+      autoescape: true
+   });
 
-	swig.init({
-		root: __dirname + "/app/views",
-		autoescape: true //default value
-	});
 
    var port = config.PORT;
    var server = app.listen(port);
