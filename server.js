@@ -74,7 +74,9 @@ function setup()
    app.use(logger('combined'));
    
    // intialize marked library
-   marked.setOptions({ });
+   marked.setOptions({ 
+      sanitize: true;
+   });
    app.locals.marked = marked;
 
    var isAdmin = sessionmanager.isAdminUserMiddleware;
