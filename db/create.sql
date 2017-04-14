@@ -76,7 +76,7 @@ CREATE TABLE Memos (
 INSERT INTO User VALUES (1,'admin','Node Goat','Admin',NULL, DEFAULT,'Admin_123', TRUE);
 INSERT INTO User VALUES (2,'user1','John','Doe',NULL,'2030-01-10','User1_123', FALSE);
 INSERT INTO User VALUES (3,'user2','Will','Smith',NULL,'2025-11-30','User2_123', FALSE);
-*/
+
 
 INSERT INTO Allocations VALUES (1,20,40,40);
 INSERT INTO Allocations VALUES (2,10,10,80);
@@ -89,3 +89,4 @@ INSERT INTO Profile(userId) VALUES (3);
 INSERT INTO Contributions(userId) VALUES (1);
 INSERT INTO Contributions(userId) VALUES (2);
 INSERT INTO Contributions(userId) VALUES (3);
+*/
